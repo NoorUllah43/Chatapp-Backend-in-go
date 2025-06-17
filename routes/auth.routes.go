@@ -13,7 +13,7 @@ func AuthRoutes(app *fiber.App) {
 	})
 
 	app.Post("/auth/login", controllers.Login)
-	app.Post("/auth/registerUser", controllers.RegisterUser)
+	app.Post("/auth/signup", controllers.RegisterUser)
 	
 
 }
