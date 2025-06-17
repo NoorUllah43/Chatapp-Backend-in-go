@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/db"
 	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/routes"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
@@ -19,15 +20,13 @@ func main() {
 		fmt.Println("env err:", err)
 	}
 
-	app.Use(cors.Config{
+	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"},
-	})
-
-
+	}))
+	db.ConnectPostgresql()
 	routes.AuthRoutes(app)
-
 
 	log.Fatal(app.Listen(":3000"))
 

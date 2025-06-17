@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2/log"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
