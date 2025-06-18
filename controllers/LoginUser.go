@@ -38,6 +38,8 @@ func Login(ctx fiber.Ctx) error {
 		Name:    "chatappToken",
 		Value:   tokenString,
 		Expires: time.Now().Add(24 * time.Hour),
+		HTTPOnly: true,
+		Secure:   true,
 	}
 	ctx.Cookie(cookie)
 

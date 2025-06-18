@@ -22,7 +22,7 @@ func RegisterUser(ctx fiber.Ctx) error {
 	if user.Email == "" || user.Name == "" || user.Password == "" {
 		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "provide name, email and password"})
 	}
-	
+
 	// check is user exist
 	exist := db.IsUserExist(user.Email)
 	if exist {
@@ -43,6 +43,8 @@ func RegisterUser(ctx fiber.Ctx) error {
 		Name:    "chatappToken",
 		Value:   tokenString,
 		Expires: time.Now().Add(24 * time.Hour),
+		HTTPOnly: true,
+		Secure:   true,
 	}
 	ctx.Cookie(cookie)
 
