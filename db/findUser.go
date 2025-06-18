@@ -25,7 +25,7 @@ func IsUserExist(email string) bool {
 	if err != nil {
 		fmt.Println("error in query", err)
 	}
-	fmt.Println(exist)
+	
 
 	return exist
 
