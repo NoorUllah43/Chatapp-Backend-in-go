@@ -1,9 +1,25 @@
 package controllers
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"time"
+
+	"github.com/gofiber/fiber/v3"
+)
 
 func Logout(ctx fiber.Ctx) error {
-	ctx.ClearCookie("chatappToken")
+	cookie := fiber.Cookie{
+		Name:     "chatappToken",
+		Value:    "",
+		Expires:  time.Now().Add(-time.Hour),
+		MaxAge:   -1,
+		HTTPOnly: true,
+		Secure:   true,
+		Path:     "/",
+	}
+	ctx.Cookie(&cookie)
 
-	return ctx.SendString("Cookie cleared successfully!")
+	return ctx.JSON(fiber.Map{
+		"Success": true,
+		"message": "Logged out successfully",
+	})
 }
