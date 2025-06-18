@@ -26,6 +26,7 @@ func main() {
 		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"},
 	}))
 	db.ConnectPostgresql()
+	db.ConnectMongoDB()
 	routes.AuthRoutes(app)
 
 	log.Fatal(app.Listen(":5000"))
