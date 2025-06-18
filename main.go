@@ -28,6 +28,6 @@ func main() {
 	db.ConnectPostgresql()
 	routes.AuthRoutes(app)
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":5000"))
 
 }

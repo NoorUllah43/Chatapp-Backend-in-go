@@ -1,11 +1,11 @@
 package db
 
 import (
-
+	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/middlewares"
 	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/models"
 )
 
-func AddUser(user models.User) (int, error) {
+func AddUser(user models.SignupCredentials) (int, error) {
 	query :=
 		`INSERT INTO 
 	users 
@@ -16,7 +16,12 @@ func AddUser(user models.User) (int, error) {
 
 	var id int
 
-	err := DB.QueryRow(query, user.Name, user.Email, user.Password).Scan(&id)
+	hashPassword, err := middlewares.HashPassword(user.Password)
+	if err != nil {
+		return 0, err
+	}
+
+	err = DB.QueryRow(query, user.Name, user.Email, hashPassword).Scan(&id)
 	if err != nil {
 		return 0, err
 	}

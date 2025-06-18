@@ -8,18 +8,16 @@ import (
 )
 
 func GenerateToken(userID int) (string, error) {
-	JWT_SECRET := []byte(os.Getenv("JWT_SECRET"))
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+	jwtSecret := []byte(os.Getenv("JWT_SECRET"))
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": userID,
-		"exp":    time.Now().Add(time.Hour * 24).Unix(),
+		"exp":       time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	tokenString, err := token.SignedString(JWT_SECRET)
-	if err != nil {
-		return "", err
-	}
+	tokenstring, err := token.SignedString(jwtSecret)
 
-	return tokenString, nil
+	return tokenstring, err
 
 }
