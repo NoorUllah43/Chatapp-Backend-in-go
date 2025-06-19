@@ -19,15 +19,18 @@ func main() {
 	if err != nil {
 		fmt.Println("env err:", err)
 	}
-
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"},
-	}))
 	db.ConnectPostgresql()
 	db.ConnectMongoDB()
+	
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowCredentials: true,
+	}))
+
 	routes.AuthRoutes(app)
+	routes.UserRoutes(app)
 
 	log.Fatal(app.Listen(":5000"))
 

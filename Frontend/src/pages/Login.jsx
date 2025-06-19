@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoChatbubbleEllipsesOutline, IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { motion } from "motion/react";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -15,11 +18,24 @@ const Login = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [passwordVisibility, setPasswordVisibility] = useState(false)
 
+    const { setUser, setIsLoggedIn } = useContext(AppContext)
+    const navigate = useNavigate()
+
+
     const submitForm = async (e) => {
         e.preventDefault()
         setIsSubmitting(true)
         if (formType == "login") {
             console.log(email, password)
+            const { data } = await axios.post('http://localhost:5000/auth/login', { email, password }, { withCredentials: true })
+            console.log(data)
+
+            if (data.success) {
+                setUser(data.userData)
+                setIsLoggedIn(true)
+                navigate('/home')
+            }
+            
         }
         else {
             console.log(name, email, password)
