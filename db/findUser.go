@@ -1,9 +1,6 @@
 package db
 
-import (
-	"database/sql"
-	"fmt"
-)
+import "fmt"
 
 func FindUser(email string) (string, string, int, error) {
 	var password string
@@ -28,20 +25,8 @@ func IsUserExist(email string) bool {
 	if err != nil {
 		fmt.Println("error in query", err)
 	}
+	
 
 	return exist
-
-}
-
-func GetAllUsers() (*sql.Rows, error) {
-
-	query := `SELECT name, email, id FROM users where`
-
-	rows, err := DB.Query(query)
-	if err != nil {
-		return &sql.Rows{}, err
-	}
-
-	return rows, nil
 
 }

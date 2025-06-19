@@ -10,7 +10,7 @@ type ErrorResponse struct{
 type SuccessResponse struct{
 	Success bool	`json:"success"`
 	Message string `json:"message"`
-	UserData UserData	`json:"userData"`
+	Data UserData	`json:"data"`
 	
 
 }

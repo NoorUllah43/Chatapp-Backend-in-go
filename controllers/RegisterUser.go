@@ -43,9 +43,11 @@ func RegisterUser(ctx fiber.Ctx) error {
 		Name:    "chatappToken",
 		Value:   tokenString,
 		Expires: time.Now().Add(24 * time.Hour),
+		HTTPOnly: true,
+		Secure:   true,
 	}
 	ctx.Cookie(cookie)
 
-	return ctx.Status(201).JSON(models.SuccessResponse{Success: true, Message: "user register successfully", UserData: models.UserData{ID: id, Name: user.Name, Email: user.Email}})
+	return ctx.Status(201).JSON(models.SuccessResponse{Success: true, Message: "user register successfully", Data: models.UserData{ID: id, Name: user.Name, Email: user.Email}})
 
 }
