@@ -4,14 +4,19 @@ import { createContext, useState } from "react";
 export const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
-    const [user, setUser] = useState({})
+    const [User, setUser] = useState({})
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-
+    const [allUsers, setAllUsers] = useState([])
+const [receiverChat, setReceiverChat] = useState()
     const value = {
-        user,
+        User,
         setUser,
         isLoggedIn,
-        setIsLoggedIn
+        setIsLoggedIn,
+        allUsers,
+        setAllUsers,
+        receiverChat,
+        setReceiverChat,
     }
 
 

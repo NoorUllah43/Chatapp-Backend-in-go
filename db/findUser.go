@@ -1,8 +1,9 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
+
+	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/models"
 )
 
 func FindUser(email string) (string, string, int, error) {
@@ -33,15 +34,27 @@ func IsUserExist(email string) bool {
 
 }
 
-func GetAllUsers() (*sql.Rows, error) {
+func GetAllUsers() ([]models.UserData, error) {
 
-	query := `SELECT name, email, id FROM users where`
+	query := `SELECT name, email, id FROM users`
 
 	rows, err := DB.Query(query)
 	if err != nil {
-		return &sql.Rows{}, err
+		return nil, err
 	}
 
-	return rows, nil
+	var AllUsers []models.UserData
+
+	for rows.Next() {
+		var user models.UserData
+
+		err := rows.Scan(&user.Name, &user.Email, &user.ID)
+		if err != nil {
+			return nil, err
+		}
+		AllUsers = append(AllUsers, user)
+	}
+
+	return AllUsers, nil
 
 }

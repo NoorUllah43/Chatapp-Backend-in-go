@@ -14,3 +14,8 @@ type SuccessResponse struct{
 	
 
 }
+type Users struct {
+	Success bool	`json:"success"`
+	Message string `json:"message"`
+	Users []UserData	`json:"users"`
+}
