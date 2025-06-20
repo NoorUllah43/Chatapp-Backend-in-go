@@ -33,5 +33,7 @@ func main() {
 	routes.UserRoutes(app)
 
 	log.Fatal(app.Listen(":5000"))
+	
+
 
 }

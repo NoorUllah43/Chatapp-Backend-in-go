@@ -1,14 +1,14 @@
 
-const SendMessage = () => {
-    const data = new Date();
-    const time = data.getHours() + ' : ' + data.getMinutes();
+const SendMessage = ({message }) => {
+  const data = new Date();
+  const time = data.getHours() + ' : ' + data.getMinutes();
   return (
-   <div className='w-auto h-auto flex flex-col items-end'>
+    <div className='w-auto h-auto flex flex-col items-end p-3'>
       <div className='bg-[#4A7BF7] text-white w-auto h-auto inline-block p-2 rounded-t-xl rounded-s-xl '>
-        <p className='w-auto h-auto inline-block'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+        <p className='w-auto h-auto inline-block'>{message}</p>
       </div>
-      <div className='w-auto h-auto inline-block p-2'>
-        <p className='w-auto h-auto inline-block'>{time}</p>
+      <div className='w-auto h-auto inline-block px-2'>
+        <p className='w-auto h-auto inline-block text-[10px] md:text-[12px]'>{time}</p>
       </div>
     </div>
 

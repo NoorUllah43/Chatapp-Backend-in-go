@@ -15,28 +15,28 @@ func RegisterUser(ctx fiber.Ctx) error {
 
 	err := json.Unmarshal(ctx.Body(), &user)
 	if err != nil {
-		ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "provide correct credentials"})
+		ctx.JSON(models.ErrorResponse{Success: false, Message: "provide correct credentials"})
 	}
 
 	// check for values
 	if user.Email == "" || user.Name == "" || user.Password == "" {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "provide name, email and password"})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: "provide name, email and password"})
 	}
 
 	// check is user exist
 	exist := db.IsUserExist(user.Email)
 	if exist {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "user already exist"})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: "user already exist"})
 	}
 
 	id, err := db.AddUser(user)
 	if err != nil {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "provide correct credentials"})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: "provide correct credentials"})
 	}
 
 	tokenString, err := middlewares.GenerateToken(id)
 	if err != nil {
-		ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "error in generating token"})
+		ctx.JSON(models.ErrorResponse{Success: false, Message: "error in generating token"})
 	}
 
 	cookie := &fiber.Cookie{

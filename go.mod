@@ -17,8 +17,12 @@ require (
 	github.com/fxamacker/cbor/v2 v2.8.0 // indirect
 	github.com/gofiber/schema v1.5.0 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.8 // indirect
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/gomodule/redigo v1.8.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/googollee/go-socket.io v1.7.0 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

@@ -22,17 +22,17 @@ func Login(ctx fiber.Ctx) error {
 
 	userName, storePassword, id, err := db.FindUser(credentials.Email)
 	if err != nil {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "user not found"})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: "user not found"})
 	}
 	// checking password is correct or not 
 	checkPassword := middlewares.CheckPasswordHash(credentials.Password, storePassword)
 	if !checkPassword {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: "incorrect password"})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: "incorrect password"})
 	}
 
 	tokenString, err := middlewares.GenerateToken(id)
 	if err != nil {
-		return ctx.Status(401).JSON(models.ErrorResponse{Success: false, Message: fmt.Sprintf("err in generating token %v", err)})
+		return ctx.JSON(models.ErrorResponse{Success: false, Message: fmt.Sprintf("err in generating token %v", err)})
 	}
 	cookie := &fiber.Cookie{
 		Name:    "chatappToken",

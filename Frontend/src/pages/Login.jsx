@@ -17,6 +17,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [passwordVisibility, setPasswordVisibility] = useState(false)
+    const [error, setError] = useState('')
 
     const { setUser, setIsLoggedIn } = useContext(AppContext)
     const navigate = useNavigate()
@@ -33,6 +34,9 @@ const Login = () => {
                 setIsLoggedIn(true)
                 navigate('/home')
             }
+            else{
+                setError(data.message)
+            }
             
         }
         else {
@@ -42,6 +46,9 @@ const Login = () => {
                 setUser(data.userData)
                 setIsLoggedIn(true)
                 navigate('/home')
+            }
+            else{
+                setError(data.message)
             }
         }
         setIsSubmitting(false)
@@ -93,9 +100,10 @@ const Login = () => {
                             <input type={passwordVisibility ? "text" : "password"} name="password" placeholder="Enter your password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="outline-none h-full w-[calc(100%-55px)] " />
                             <button type="button" onClick={() => setPasswordVisibility(!passwordVisibility)} className="w-5 h-full flex items-center justify-center text-gray-500" >{passwordVisibility ? <IoEyeOutline /> : <IoEyeOffOutline />}</button>
                         </div>
-                        {formType == "login" && (
-                            <p className="text-purple-500 text-right w-full ">Forget password?</p>
+                        {error && (
+                            <p className="text-red-500 w-full text-left text-[12px] md:text-sm">{error}</p>
                         )}
+                        
                         <button type="submit" disabled={isSubmitting} className={`bg-purple-500 hover:bg-purple-600 duration-200 text-white font-bold py-2 px-4 rounded-md h-[42px] w-full flex items-center justify-center ${isSubmitting ? 'opacity-50' : ''}`}>
                             {
                                 isSubmitting ? (
