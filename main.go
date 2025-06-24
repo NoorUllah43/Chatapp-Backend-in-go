@@ -20,7 +20,7 @@ func main() {
 		fmt.Println("env err:", err)
 	}
 	db.ConnectPostgresql()
-	db.ConnectMongoDB()
+	// db.ConnectMongoDB()
 	
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},

@@ -23,6 +23,6 @@ func ConnectPostgresql() {
 	}
 
 	DB = db
-	log.Info("database connected to postgresql")
+	log.Info("postgres database connected ")
 
 }

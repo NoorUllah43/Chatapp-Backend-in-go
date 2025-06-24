@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { AppContext } from '../context/AppContext'
 import { MdSearch } from "react-icons/md"
 import axios from 'axios'
@@ -19,7 +19,7 @@ const Home = () => {
   const [searchChat, setSearchChat] = useState('')
   const [Message, setMessage] = useState('')
   const [showSidebar, setShowSidebar] = useState(false)
-  var ws
+  const ws = useRef(null)
   const navigate = useNavigate()
 
 
@@ -69,16 +69,37 @@ const Home = () => {
 
 
   useEffect(() => {
-    ws = new WebSocket("ws://localhost:8080/ws");
+   ws.current = new WebSocket("ws://localhost:8080/ws");
+  
 
-    ws.onopen = function () {
+    ws.current.onopen = function () {
       console.log("Connected to WebSocket server");
     };
+    ws.current.onmessage = function (event) {
+      // const message = JSON.parse(event.data);
+      console.log("Received message:", event);
+      let msg = JSON.parse(event.data)
+      console.log(msg)
 
+    };
+    
   }, [])
 
+  
   const sendMessage = () => {
     
+    if (ws.current) {
+      let sendData = {
+        from: User.ID,
+        to: receiverChat.ID,
+        message: Message
+      }
+      ws.current.send(JSON.stringify(sendData));
+      setMessage("");
+    } else {
+      console.error("WebSocket is not open");
+    }
+  
     
   }
   

@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:14-alpine 
+    container_name: chat-app-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: ChatApp
+    ports:
+      - "5432:5432" 
+    volumes:
+      - pg_data:/var/lib/postgresql/data 
+  backend:
+    build: .
+    container_name: chat-app-backend
+    ports:
+      - "5000:5000" 
+    depends_on:
+      - postgres
+  frontend:
+    build: ./frontend
+    container_name: chat-app-frontend
+    ports:
+      - "5173:5173"
+  websocket:
+    build: ./webSocket
+    container_name: chat-app-webSocket
+    ports:
+      - "8080:8080"
+volumes:
+  pg_data:
