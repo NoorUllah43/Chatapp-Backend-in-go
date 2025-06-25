@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/gorilla/websocket"
+	"net/http"
+	"sync"
+		"strconv"
+
 )
 
 type Message struct {
@@ -20,7 +22,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var clients map[string]*websocket.Conn
+var clients = make(map[int]*websocket.Conn)
+var mutex = &sync.Mutex{}
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -28,6 +31,19 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error upgrading:", err)
 		return
 	}
+	query := r.URL.Query()
+	userID := query.Get("userId")
+	fmt.Println(userID)
+
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		fmt.Println("Invalid userId:", err)
+		return
+	}
+	mutex.Lock()
+	clients[id] = conn
+	mutex.Unlock()
+
 	defer conn.Close()
 	for {
 		_, data, err := conn.ReadMessage()
@@ -40,11 +56,12 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(data, &msg)
 		if err != nil {
 			fmt.Println("JSON unmarshal error:", err)
+
 		}
 
-		fmt.Println(msg)
-		
-		err = conn.WriteMessage(websocket.TextMessage, data)
+		var receiverConn = clients[msg.To]
+
+		err = receiverConn.WriteMessage(websocket.TextMessage, data)
 		if err != nil {
 			fmt.Println("Error writing message:", err)
 			break

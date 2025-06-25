@@ -69,7 +69,7 @@ const Home = () => {
 
 
   useEffect(() => {
-   ws.current = new WebSocket("ws://localhost:8080/ws");
+   ws.current = new WebSocket(`ws://localhost:8080/ws?userId=${User.ID}`);
   
 
     ws.current.onopen = function () {
