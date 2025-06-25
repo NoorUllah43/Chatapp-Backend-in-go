@@ -18,6 +18,7 @@ const Home = () => {
 
   const [searchChat, setSearchChat] = useState('')
   const [Message, setMessage] = useState('')
+  const [allMessages, setAllMessages] = useState([])
   const [showSidebar, setShowSidebar] = useState(false)
   const ws = useRef(null)
   const navigate = useNavigate()
@@ -69,25 +70,25 @@ const Home = () => {
 
 
   useEffect(() => {
-   ws.current = new WebSocket(`ws://localhost:8080/ws?userId=${User.ID}`);
-  
+    ws.current = new WebSocket(`ws://localhost:8080/ws?userId=${User.ID}`);
+
 
     ws.current.onopen = function () {
       console.log("Connected to WebSocket server");
     };
     ws.current.onmessage = function (event) {
-      // const message = JSON.parse(event.data);
-      console.log("Received message:", event);
-      let msg = JSON.parse(event.data)
-      console.log(msg)
+      let msg = JSON.parse(event.data);
+      console.log(msg);
+      setAllMessages(prev => [...prev, msg]);
+
 
     };
-    
+
   }, [])
 
-  
+
   const sendMessage = () => {
-    
+
     if (ws.current) {
       let sendData = {
         from: User.ID,
@@ -99,10 +100,10 @@ const Home = () => {
     } else {
       console.error("WebSocket is not open");
     }
-  
-    
+
+
   }
-  
+
 
 
 
@@ -189,8 +190,9 @@ const Home = () => {
             </div>
 
             <div className='md:w-full w-[calc(100%-24px)] h-full flex flex-col overflow-auto md:p-3 '>
-              <SendMessage message={"hi"} />
-              <ReceiveMessage message={"how are you?"} />
+              {allMessages.map((msg, index) => (
+                msg.from === User.ID ? (<SendMessage key={index} message={msg.message} />) : (<ReceiveMessage key={index} message={msg.message} />)
+              ))}
             </div>
 
 

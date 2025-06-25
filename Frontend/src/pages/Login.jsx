@@ -72,7 +72,7 @@ const Login = () => {
                     }} className='flex items-center justify-center text-9xl font-bold '>
                     <IoChatbubbleEllipsesOutline />
                 </motion.div>
-                <h2 className="text-3xl font-bold">Wlecome to ChatVerse</h2>
+                <h2 className="text-3xl font-bold">Welcome to ChatVerse</h2>
                 <p className="text-sm text-gray-200">connect and chat with anyone anywhere</p>
             </div>
             <div className="flex items-center justify-center md:w-1/2 w-full h-screen">
