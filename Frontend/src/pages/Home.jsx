@@ -79,9 +79,12 @@ const Home = () => {
     ws.current.onmessage = function (event) {
       let msg = JSON.parse(event.data);
       console.log(msg);
-      setAllMessages(prev => [...prev, msg]);
-
-
+      if (msg.from === User.ID && msg.to === receiverChat.ID) {
+        setAllMessages(prev => [...prev, msg]);
+      } else if (msg.to === User.ID && msg.from === receiverChat.ID) {
+        setAllMessages(prev => [...prev, msg]);
+      }
+      
     };
 
   }, [])
@@ -128,7 +131,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className={`text-2xl text-gray-500 cursor-pointer ${!showSidebar ? 'hidden' : 'block'}`}>
+          <div className={`text-2xl text-gray-500 cursor-pointer md:block ${!showSidebar ? 'hidden' : 'block'}`}>
             <span className='p-2' onClick={logout} >
               <IoIosLogOut />
             </span>

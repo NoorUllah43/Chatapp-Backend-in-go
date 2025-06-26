@@ -13,7 +13,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - name: chat-app-backend
+      - name: chat-app-frontend
         image: noorullah43/chatappingo-frontend:latest 
         ports:
         - containerPort: 5173
