@@ -11,9 +11,10 @@ import (
 )
 
 type Message struct {
-	From    int    `json:"from"`
-	To      int    `json:"to"`
+	SenderID    int    `json:"senderID"`
+	ReceiverID      int    `json:"receiverID"`
 	Message string `json:"message"`
+	Time string `json:"time"`
 }
 
 var upgrader = websocket.Upgrader{
@@ -33,7 +34,6 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	query := r.URL.Query()
 	userID := query.Get("userId")
-	fmt.Println(userID)
 
 	id, err := strconv.Atoi(userID)
 	if err != nil {
@@ -59,7 +59,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 		}
 
-		var receiverConn = clients[msg.To]
+		var receiverConn = clients[msg.ReceiverID]
 
 		err = receiverConn.WriteMessage(websocket.TextMessage, data)
 		if err != nil {

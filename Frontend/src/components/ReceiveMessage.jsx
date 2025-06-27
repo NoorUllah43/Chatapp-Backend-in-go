@@ -1,7 +1,6 @@
 
-const ReceiveMessage = ({message}) => {
-    const data = new Date();
-    const time = data.getHours() + ' : ' + data.getMinutes();
+const ReceiveMessage = ({message, time}) => {
+
   return (
      <div className='w-auto h-auto flex flex-col items-start p-3'>
       <div className='bg-gray-200 w-auto h-auto inline-block p-2 rounded-t-xl rounded-e-xl '>

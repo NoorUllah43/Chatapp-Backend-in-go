@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 
@@ -19,7 +20,7 @@ const Login = () => {
     const [passwordVisibility, setPasswordVisibility] = useState(false)
     const [error, setError] = useState('')
 
-    const { setUser, setIsLoggedIn } = useContext(AppContext)
+    const { setUser, setIsLoggedIn, backendURL } = useContext(AppContext)
     const navigate = useNavigate()
 
 
@@ -27,12 +28,12 @@ const Login = () => {
         e.preventDefault()
         setIsSubmitting(true)
         if (formType == "login") {
-            const { data } = await axios.post('http://localhost:5000/auth/login', { email, password }, { withCredentials: true })
-            console.log(data)
+            const { data } = await axios.post(backendURL + '/auth/login', { email, password }, { withCredentials: true })
             if (data.success) {
                 setUser(data.userData)
                 setIsLoggedIn(true)
                 navigate('/home')
+                toast.success(data.message)
             }
             else{
                 setError(data.message)
@@ -40,12 +41,12 @@ const Login = () => {
             
         }
         else {
-            const { data } = await axios.post('http://localhost:5000/auth/signup', { name, email, password }, { withCredentials: true })
-            console.log(data)
+            const { data } = await axios.post(backendURL + '/auth/signup', { name, email, password }, { withCredentials: true })
             if (data.success) {
                 setUser(data.userData)
                 setIsLoggedIn(true)
                 navigate('/home')
+                toast.success(data.message)
             }
             else{
                 setError(data.message)

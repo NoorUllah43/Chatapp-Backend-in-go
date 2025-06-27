@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from 'react'
 import { AppContext } from '../context/AppContext'
 import { MdSearch } from "react-icons/md"
-import axios from 'axios'
+import axios, { all } from 'axios'
 import { IoImageOutline, IoSendOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5"
 import { motion } from 'motion/react'
 import SendMessage from '../components/SendMessage'
@@ -20,16 +20,16 @@ const Home = () => {
   const [Message, setMessage] = useState('')
   const [allMessages, setAllMessages] = useState([])
   const [showSidebar, setShowSidebar] = useState(false)
-  const ws = useRef(null)
+
   const navigate = useNavigate()
 
 
-  const { User, setAllUsers, allUsers, receiverChat, setReceiverChat, setIsLoggedIn } = useContext(AppContext)
+  const { User, setAllUsers, backendURL, allUsers, receiverChat, setReceiverChat, setIsLoggedIn, ws } = useContext(AppContext)
 
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/user/all', { withCredentials: true })
+        const { data } = await axios.get(backendURL + '/user/all', { withCredentials: true })
         if (data.success) {
           setAllUsers(data.users)
         } else {
@@ -49,13 +49,14 @@ const Home = () => {
 
 
   const handleChatClick = (user) => {
+    setAllMessages([])
     setReceiverChat(user)
   }
 
   const logout = async () => {
     try {
 
-      const { data } = await axios.get('http://localhost:5000/auth/logout', { withCredentials: true })
+      const { data } = await axios.get(backendURL + '/auth/logout', { withCredentials: true })
       if (data.Success) {
         toast.success(data.message)
         navigate('/')
@@ -70,47 +71,46 @@ const Home = () => {
 
 
   useEffect(() => {
-    ws.current = new WebSocket(`ws://localhost:8080/ws?userId=${User.ID}`);
 
-
-    ws.current.onopen = function () {
-      console.log("Connected to WebSocket server");
-    };
+    if (!ws.current) {
+      ws.current = new WebSocket(`ws://localhost:8080/ws?userId=${User.ID}`);
+      ws.current.onopen = function () {
+        console.log("Connected to WebSocket server");
+      };
+    }
     ws.current.onmessage = function (event) {
-      let msg = JSON.parse(event.data);
-      console.log(msg);
-      if (msg.from === User.ID && msg.to === receiverChat.ID) {
-        setAllMessages(prev => [...prev, msg]);
-      } else if (msg.to === User.ID && msg.from === receiverChat.ID) {
-        setAllMessages(prev => [...prev, msg]);
+      const msg = JSON.parse(event.data);
+      if (
+        (msg.senderID === receiverChat?.ID && msg.receiverID === User.ID) ||
+        (msg.senderID === User.ID && msg.receiverID === receiverChat?.ID)
+      ) {
+        setAllMessages(prev => {
+          const updated = [...prev, msg];
+          return updated;
+        });
       }
-      
     };
 
-  }, [])
+  }, [receiverChat, User.ID])
 
 
   const sendMessage = () => {
-
     if (ws.current) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
       let sendData = {
-        from: User.ID,
-        to: receiverChat.ID,
-        message: Message
+        senderID: User.ID,
+        receiverID: receiverChat.ID,
+        message: Message,
+        time: time
       }
       ws.current.send(JSON.stringify(sendData));
+      setAllMessages(prev => [...prev, sendData]); // Add this line
       setMessage("");
     } else {
       console.error("WebSocket is not open");
     }
-
-
   }
-
-
-
-
-
 
   return (
     <main className='flex items-center w-full h-screen'>
@@ -194,7 +194,9 @@ const Home = () => {
 
             <div className='md:w-full w-[calc(100%-24px)] h-full flex flex-col overflow-auto md:p-3 '>
               {allMessages.map((msg, index) => (
-                msg.from === User.ID ? (<SendMessage key={index} message={msg.message} />) : (<ReceiveMessage key={index} message={msg.message} />)
+                msg.senderID === User?.ID
+                  ? (<SendMessage key={index} time={msg.time} message={msg.message} />)
+                  : (<ReceiveMessage key={index} time={msg.time} message={msg.message} />)
               ))}
             </div>
 

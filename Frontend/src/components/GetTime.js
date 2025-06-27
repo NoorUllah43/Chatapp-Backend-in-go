@@ -1,0 +1,14 @@
+
+
+
+export const getCurrentTime = () => {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const mins = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${mins} ${ampm}`;
+}
