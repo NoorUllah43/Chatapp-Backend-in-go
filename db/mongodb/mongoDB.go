@@ -1,4 +1,4 @@
-package db
+package mongodb
 
 import (
 	"context"
@@ -8,8 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Messages *mongo.Collection
-
+var mongoDB *mongo.Database
 func ConnectMongoDB() {
 
 	const connectionString = "mongodb://localhost:27017"
@@ -29,6 +28,6 @@ func ConnectMongoDB() {
 
 	log.Println("connected to MongoDB")
 
-	Messages = client.Database("ChatAppInGo").Collection("Messages")
+	mongoDB = client.Database("ChatAppInGo")
 
 }

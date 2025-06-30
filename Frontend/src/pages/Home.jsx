@@ -20,6 +20,7 @@ const Home = () => {
   const [Message, setMessage] = useState('')
   const [allMessages, setAllMessages] = useState([])
   const [showSidebar, setShowSidebar] = useState(false)
+  const messagesEndRef = useRef();
 
   const navigate = useNavigate()
 
@@ -44,13 +45,30 @@ const Home = () => {
 
   }, [])
 
+  useEffect(() => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+  }, [allMessages]);
 
 
 
-
-  const handleChatClick = (user) => {
+  const handleChatClick = async (user) => {
     setAllMessages([])
+    try {
+      const { data } = await axios.get(`${backendURL}/message/history/${User.ID}/${user.ID}`, { withCredentials: true })
+      if (data.success) {
+        setAllMessages(data.messages)
+      } else {
+        console.error('Failed to fetch messages:', data.message)
+
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
     setReceiverChat(user)
+    // scrollToBottom 
+
+
   }
 
   const logout = async () => {
@@ -186,18 +204,23 @@ const Home = () => {
 
           {/* Messages  */}
           <div id="chatMessages" className={`w-full h-[calc(100%-160px)] flex  `}>
-            {/* toggle button for mobile view */}
 
             <div onClick={() => setShowSidebar(!showSidebar)} className='w-6 h-full rounded-md flex items-center justify-center bg-white border-r-2 border-[#E5E7EB] md:hidden'>
               <button className='w-full h-10 flex items-center justify-center'>{showSidebar ? <MdKeyboardArrowLeft /> : <MdKeyboardArrowRight />}</button>
             </div>
 
-            <div className='md:w-full w-[calc(100%-24px)] h-full flex flex-col overflow-auto md:p-3 '>
-              {allMessages.map((msg, index) => (
-                msg.senderID === User?.ID
-                  ? (<SendMessage key={index} time={msg.time} message={msg.message} />)
-                  : (<ReceiveMessage key={index} time={msg.time} message={msg.message} />)
-              ))}
+            <div ref={messagesEndRef} className='md:w-full w-[calc(100%-24px)] h-full flex flex-col overflow-auto md:p-3 '>
+              {allMessages === null ? (
+                <div className='w-full h-full flex items-center justify-center'>
+                  <p className='text-gray-400'>No messages yet</p>
+                </div>
+              ) : (
+                allMessages.map((msg, index) => (
+                  (msg.senderID === User?.ID || msg.senderid === User?.ID)
+                    ? (<SendMessage key={index} time={msg.time} message={msg.message} />)
+                    : (<ReceiveMessage key={index} time={msg.time} message={msg.message} />)
+                ))
+              )}
             </div>
 
 

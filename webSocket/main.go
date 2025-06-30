@@ -1,20 +1,22 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/websocket"
 	"net/http"
+	"strconv"
 	"sync"
-		"strconv"
+	"websocket/mongodb"
 
+	"github.com/gorilla/websocket"
 )
 
 type Message struct {
-	SenderID    int    `json:"senderID"`
-	ReceiverID      int    `json:"receiverID"`
-	Message string `json:"message"`
-	Time string `json:"time"`
+	SenderID   int    `json:"senderID"`
+	ReceiverID int    `json:"receiverID"`
+	Message    string `json:"message"`
+	Time       string `json:"time"`
 }
 
 var upgrader = websocket.Upgrader{
@@ -45,6 +47,8 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	mutex.Unlock()
 
 	defer conn.Close()
+	messageCollection := mongodb.GetCollection("Messages")
+	
 	for {
 		_, data, err := conn.ReadMessage()
 		if err != nil {
@@ -67,7 +71,14 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		_, err = messageCollection.InsertOne(context.Background(), msg)
+		if err != nil {
+			fmt.Println("Error saving message to MongoDB:", err)
+		}
+
+
 	}
+
 }
 
 func main() {

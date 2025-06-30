@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/NoorUllah43/Chatapp-Backend-in-go.git/models"
@@ -10,7 +11,6 @@ import (
 
 func VerifyToken(ctx fiber.Ctx) error {
 	tokenString := ctx.Cookies("chatappToken")
-
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
@@ -33,7 +33,7 @@ func VerifyToken(ctx fiber.Ctx) error {
 	if userID <= 0 {
 		return ctx.Status(404).JSON(models.ErrorResponse{Success: false, Message: "invalid user id"})
 	}
-
+	fmt.Println("userID:", userID)
 	ctx.Locals("userID", userID)
 
 	return ctx.Next()
