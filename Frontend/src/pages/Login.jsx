@@ -86,19 +86,19 @@ const Login = () => {
                         {formType == "signup" && (
                             <div className="flex gap-2 items-center border-2 border-gray-300 rounded-md p-2 h-[42px] w-full focus-within:ring-2 focus-within:ring-purple-500 ">
                                 <label htmlFor="name" className="text-gray-400 text-2xl w-[30px]"><FaUser /></label>
-                                <input type="name" name="name" placeholder="Enter your name" id="name" required value={name} onChange={(e) => setName(e.target.value)} className="outline-none h-full w-[calc(100%-30px)] " />
+                                <input type="name" disabled={isSubmitting} name="name" placeholder="Enter your name" id="name" required value={name} onChange={(e) => setName(e.target.value)} className="outline-none h-full w-[calc(100%-30px)] " />
                             </div>
                         )}
 
                         {/* email input  */}
                         <div className="flex gap-2 items-center border-2 border-gray-300 rounded-md p-2 h-[42px] w-full focus-within:ring-2 focus-within:ring-purple-500">
                             <label htmlFor="email" className="text-gray-400 text-2xl w-[30px]"><MdEmail /></label>
-                            <input type="email" name="email" placeholder="Enter your email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="outline-none h-full w-[calc(100%-30px)] " />
+                            <input type="email" name="email" disabled={isSubmitting} placeholder="Enter your email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="outline-none h-full w-[calc(100%-30px)] " />
                         </div>
                         {/* password input  */}
                         <div className="flex gap-2 items-center border-2 border-gray-300 rounded-md p-2 h-[42px] w-full focus-within:ring-2 focus-within:ring-purple-500">
                             <label htmlFor="password" className="text-gray-400 text-2xl w-[30px]"><MdPassword /> </label>
-                            <input type={passwordVisibility ? "text" : "password"} name="password" placeholder="Enter your password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="outline-none h-full w-[calc(100%-55px)] " />
+                            <input type={passwordVisibility ? "text" : "password"} name="password" disabled={isSubmitting} placeholder="Enter your password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="outline-none h-full w-[calc(100%-55px)] " />
                             <button type="button" onClick={() => setPasswordVisibility(!passwordVisibility)} className="w-5 h-full flex items-center justify-center text-gray-500" >{passwordVisibility ? <IoEyeOutline /> : <IoEyeOffOutline />}</button>
                         </div>
                         {error && (

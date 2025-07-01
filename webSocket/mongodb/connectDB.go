@@ -12,7 +12,7 @@ var client *mongo.Client
 
 func ConnectDB() {
 	var err error
-	client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://mongodb:27017"))
 	if err != nil {
 		panic(err)
 	}

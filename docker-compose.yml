@@ -15,12 +15,7 @@ services:
 
   mongodb:
     image: mongo:8.0
-    container_name: chat-app-mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: 1234
-      MONGO_INITDB_DATABASE: ChatAppInGo
+    container_name: chat-app-mongo
     ports:
       - "27017:27017"
     volumes:

@@ -46,8 +46,11 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
   }, [allMessages]);
 
 
@@ -102,10 +105,7 @@ const Home = () => {
         (msg.senderID === receiverChat?.ID && msg.receiverID === User.ID) ||
         (msg.senderID === User.ID && msg.receiverID === receiverChat?.ID)
       ) {
-        setAllMessages(prev => {
-          const updated = [...prev, msg];
-          return updated;
-        });
+        allMessages ? setAllMessages(prev => [...prev, msg]) : setAllMessages([msg]);
       }
     };
 
@@ -123,7 +123,10 @@ const Home = () => {
         time: time
       }
       ws.current.send(JSON.stringify(sendData));
-      setAllMessages(prev => [...prev, sendData]); // Add this line
+      if (!allMessages) {
+        setAllMessages([]);
+      }
+      setAllMessages(prev => [...prev, sendData]);
       setMessage("");
     } else {
       console.error("WebSocket is not open");
